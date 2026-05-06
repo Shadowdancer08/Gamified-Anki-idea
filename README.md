@@ -1,32 +1,40 @@
-# ZetaMed
+# Zetamed
 
-Bare-bones, fast multiplayer medical quiz app for med students.
+A Zetamac-inspired "medic vs medic" quiz app for medical students.
 
-## Stack Recommendation
-- **Frontend:** Vite + React + TypeScript (fast dev loop, low complexity).
-- **State + game rules:** plain TypeScript modules (no heavy state libs yet).
-- **Realtime (Phase 3+):** **Supabase Realtime** (simple hosted Postgres + subscriptions, good for room/game sync without self-hosting sockets).
+## Run it
 
-## Architecture Plan (Serious + Staged)
+```bash
+node server.js
+```
 
-### Core modules (shared by local + online)
-- `src/core/types.ts`: canonical domain types (Question, Player, GameSettings, RoomState, etc).
-- `src/core/gameEngine.ts`: pure game logic (turns, scoring, winner checks, question selection, rematch resets).
-- `src/data/questions.ts`: local hard-coded bank for now; later replace with DB/JSON loader.
+Open `http://localhost:3000`, create a room, then share the room URL with another student.
 
-### UI modules
-- `src/App.tsx`: route-level screen state (`home`, `setup`, `quiz`, later `room-host`, `room-join`).
-- Future component folders for scoreboard, question card, room lobby, QR panel.
+## Deploy it
 
-### Online modules (Phase 3+)
-- `src/online/roomClient.ts`: create/join room APIs.
-- `src/online/realtimeSync.ts`: subscribe/publish room state updates.
-- `src/online/mappers.ts`: serialize/deserialize room/game state from backend.
+This app is ready for any Node web host. Use:
 
-## Build Phases
-1. **Phase 1 (now):** local playable core.
-2. **Phase 2:** richer local setup (filters, target score, randomization, no repeats, keyboard shortcuts, final rankings).
-3. **Phase 3:** room architecture + backend integration.
-4. **Phase 4:** synced multi-device gameplay.
-5. **Phase 5:** QR join links.
-6. **Phase 6:** scalable question-bank model.
+```bash
+node server.js
+```
+
+For Render, connect a GitHub repo containing this folder. Render can read `render.yaml`, or you can create a Web Service manually with:
+
+- Build command: leave empty
+- Start command: `node server.js`
+- Runtime: Node
+
+The app reads `process.env.PORT`, so hosts can assign the public port automatically.
+
+## What works
+
+- Create a quiz room.
+- Join by room link.
+- Play a local two-student duel on one screen.
+- Two-player live room state with Server-Sent Events.
+- Medical multiple-choice questions.
+- Scores, answer reveal, explanations, and next-question flow.
+
+## Notes
+
+Rooms are stored in memory, so restarting the server clears them. This is intentional for the first bare-bones prototype.
